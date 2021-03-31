@@ -22,27 +22,34 @@ function isValidEmail(email) {
     return re.test(String(email).toLowerCase());
 }
 
+function getFieldName(input) {
+    return input.id.charAt(0).toUpperCase()+input.id.slice(1);
+}
+
+function checkRequired(inputArr) {
+    inputArr.forEach((input) => {
+        if(input.value.trim() === '') {
+            showError(input, `${getFieldName(input)} is required`);
+        } else {
+            showSuccess(input);
+        }
+    });
+}
+
+function checkLength(input, min, max) {
+    if(input.value.length < min) {
+        showError(input, `${getFieldName(input)} length must be between ${min}-${max}`);
+    } else if(input.value.length > max) {
+        showError(input, `${getFieldName(input)} length must be between ${min}-${max}`);
+    } else {
+        showError(input);
+    }
+}
+
 form.addEventListener('submit', (event) => {
     event.preventDefault();
-    
-    if(username.value === '') {
-        showError(username, 'Username is required');
-    } else {
-        showSuccess(username);
-    }
 
-    if(email.value === '') {
-        showError(email, 'email is required');
-    } else if(!isValidEmail(email)) {
-        showError(email, 'Invalid format for Email');
-    } 
-    else {
-        showSuccess(email);
-    }
-
-    if(password.value === '') {
-        showError(password, 'password is required');
-    } else {
-        showSuccess(password);
-    }
+    checkRequired([username, email, password, password2]);
+    checkLength(username, 3, 15);
+    checkLength(password, 8, 20);
 })
